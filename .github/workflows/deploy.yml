@@ -1,0 +1,27 @@
+name: Salesforce CI/CD Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install sfdx-cli --global
+
+      - name: Authenticate Target Org
+        run: |
+          echo "${{ secrets.SFDX_AUTH_URL }}" > sfdx_auth.txt
+          sfdx auth:sfdxurl:store -f sfdx_auth.txt -a targetOrg
+
+      - name: Deploy to Org 2
+        run: |
+          sfdx force:source:deploy -p force-app -u targetOrg
