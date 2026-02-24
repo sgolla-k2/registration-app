@@ -1,4 +1,4 @@
-name: Salesforce CI/CD Deployment
+name: Salesforce CI/CD
 
 on:
   push:
@@ -10,19 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Source
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Install Salesforce CLI
         run: |
           npm install sfdx-cli --global
 
-      - name: Authenticate Target Org
+      - name: Authenticate to Target Org
         run: |
-          echo "${{ secrets.SFDX_AUTH_URL }}" > sfdx_auth.txt
-          sfdx auth:sfdxurl:store -f sfdx_auth.txt -a targetOrg
+          echo "${{ secrets.SF_AUTH_URL }}" > auth.txt
+          sfdx force:auth:sfdxurl:store -f auth.txt -a TargetOrg
 
-      - name: Deploy to Org 2
+      - name: Deploy to sgolla@cpq.com
         run: |
-          sfdx force:source:deploy -p force-app -u targetOrg
+          sfdx force:source:deploy -p force-app -u TargetOrg
           
